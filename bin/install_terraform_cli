@@ -19,10 +19,11 @@ sudo apt update
 
 sudo apt-get install terraform -y
 
+cd $PROJECT_ROOT
+
 touch ~/.bashrc
 
 terraform -install-autocomplete
 
 exec bash
 
-cd $PROJECT_ROOT

@@ -11,6 +11,16 @@ terraform {
   }
 }
 
+terraform {
+  cloud {
+    organization = "bgansec"
+
+    workspaces {
+      name = "terratowns"
+    }
+  }
+}
+
 provider "aws" {
 }
 provider "random" {

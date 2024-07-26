@@ -240,3 +240,108 @@ If you lose this file, you lose knowning the state of your infrastructure.
 ### Terraform Directory
 
 `.terraform` directory contains binaries of terraform providers.
+
+## Issues with Terraform Cloud Login and Gitpod Workspace
+
+When attempting to run `terraform login` it will launch bash a wiswig view to generate a token. However it does not work expected in Gitpod VsCode in the browser.
+
+The workaround is manually generate a token in Terraform Cloud
+
+```
+https://app.terraform.io/app/settings/tokens?source=terraform-login
+```
+
+Then create open the file manually here:
+
+```sh
+touch /home/gitpod/.terraform.d/credentials.tfrc.json
+open /home/gitpod/.terraform.d/credentials.tfrc.json
+```
+
+Provide the following code (replace your token in the file):
+
+```json
+{
+  "credentials": {
+    "app.terraform.io": {
+      "token": "YOUR-TERRAFORM-CLOUD-TOKEN"
+    }
+  }
+}
+``````
+
+## Issuess with Terraform retrieving the AWS credential
+
+### Set Env Vars
+```
+export AWS_ACCESS_KEY_ID=your-access-key-id
+export AWS_SECRET_ACCESS_KEY=your-secret-access-key
+export AWS_DEFAULT_REGION=your-default-region
+```
+
+### Create the `variables.tf` File
+```
+variable "aws_access_key" {
+  description = "The AWS access key"
+  type        = string
+}
+
+variable "aws_secret_key" {
+  description = "The AWS secret key"
+  type        = string
+}
+
+variable "region" {
+  description = "The AWS region"
+  type        = string
+  default     = "us-west-2"
+}
+```
+### Create the `terraform.tfvars` File
+```
+aws_access_key = "your-access-key-id"
+aws_secret_key = "your-secret-access-key"
+region         = "your-default-region"
+
+```
+### Modify the provider Block in `main.tf`
+```
+provider "aws" {
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  region     = var.region
+}
+```
+## Automate the Creation of `terraform.tfvars`
+Create a script to generate `terraform.tfvars` upon starting new workspace
+
+```
+#!/bin/bash
+
+# Define environment variables for AWS credentials
+AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-your-access-key-id}
+AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-your-secret-access-key}
+AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-your-default-region}
+
+# Create the terraform.tfvars file
+cat <<EOF > terraform.tfvars
+aws_access_key = "${AWS_ACCESS_KEY_ID}"
+aws_secret_key = "${AWS_SECRET_ACCESS_KEY}"
+region         = "${AWS_DEFAULT_REGION}"
+EOF
+
+echo "terraform.tfvars file has been created."
+```
+In order to make our bash scripts executable we need to change linux permission for the fix to be exetuable at the user mode.
+
+```sh
+chmod u+x ./bin/generate_tfvars
+```
+
+### Update the gitpod.yml File
+```
+tasks:
+  - name: tfvars
+    before: |
+      source ./bin/generate_tfvars
+```

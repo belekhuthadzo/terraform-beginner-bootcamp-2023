@@ -11,5 +11,5 @@ variable "aws_secret_key" {
 variable "region" {
   description = "The AWS region"
   type        = string
-  default     = "us-west-2"  # You can set your preferred default region
+  default     = "us-east-1"
 }

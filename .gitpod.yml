@@ -3,6 +3,7 @@ tasks:
     before: |
       source ./bin/set_tf_alias
       source ./bin/install_terraform_cli
+      source ./bin/install_aws_credentials
       source ./bin/generate_tfrc_credentials
   - name: aws-cli
     env:
@@ -10,10 +11,6 @@ tasks:
     before: |
       source ./bin/set_tf_alias
       source ./bin/install_aws_cli
-  - name: aws-creds
-    before: |
-      source ./bin/set_tf_alias
-      source ./bin/install_aws_credentials
       
 vscode:
   extensions:

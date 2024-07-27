@@ -1,9 +1,6 @@
 tasks:
   - name: terraform
     init: |
-      tasks:
-  - name: terraform
-    init: |
       echo "Setting executable permissions for scripts..."
       chmod +x ./bin/set_tf_alias
       chmod +x ./bin/install_terraform_cli

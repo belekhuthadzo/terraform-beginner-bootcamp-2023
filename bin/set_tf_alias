@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+echo "Setting up Terraform alias..."
 # Check if the alias already exists in the .bash_profile
 grep -q 'alias tf="terraform"' ~/.bash_profile
 
@@ -15,3 +16,4 @@ fi
 
 # Optional: source the .bash_profile to make the alias available immediately
 source ~/.bash_profile
+echo "Setting up Terraform alias Completed"

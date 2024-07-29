@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 cd /workspace
+echo "Installing Terraform CLI..."
 sudo apt-get update && sudo apt-get install -y gnupg software-properties-common curl
 
 wget -O- https://apt.releases.hashicorp.com/gpg | \
@@ -26,4 +27,4 @@ touch ~/.bashrc
 terraform -install-autocomplete
 
 exec bash
-
+echo "Terraform CLI installation completed."

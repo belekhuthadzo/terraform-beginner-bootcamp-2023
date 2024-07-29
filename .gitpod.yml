@@ -1,38 +1,17 @@
 tasks:
   - name: terraform
-    init: |
-      echo "Setting executable permissions for scripts..."
-      chmod +x ./bin/set_tf_alias
-      chmod +x ./bin/install_terraform_cli
-      chmod +x ./bin/generate_tfrc_credentials
-      chmod +x ./bin/install_aws_credentials
-      
-      echo "Scripts permissions set. Starting initialization..."
-
-      echo "Setting TF alias..."
-      source ./bin/set_tf_alias
-      echo "TF alias set."
-
-      echo "Installing Terraform CLI..."
+    before: |
+      echo "Running terraform setup scripts..."
       source ./bin/install_terraform_cli
-      echo "Terraform CLI installed."
-
-      echo "Generating TFRC credentials..."
-      source ./bin/generate_tfrc_credentials
-      echo "TFRC credentials generated."
-
-      echo "Installing AWS credentials..."
+      source ./bin/set_tf_alias
       source ./bin/install_aws_credentials
-      echo "AWS credentials installed."
-
-      echo "Initialization completed."
-      
+      source ./bin/generate_tfrc_credentials
   - name: aws-cli
     env:
       AWS_CLI_AUTO_PROMPT: on-partial
-    init: |
-      bash ./bin/set_tf_alias
-      bash ./bin/install_aws_cli
+    before: |
+      echo "Running AWS CLI setup script..."
+      source ./bin/install_aws_cli
       
 vscode:
   extensions:

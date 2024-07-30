@@ -1,15 +1,8 @@
-variable "aws_access_key" {
-  description = "The AWS access key"
+variable "user_uuid" {
+  description = "The UUID of the user"
   type        = string
-}
-
-variable "aws_secret_key" {
-  description = "The AWS secret key"
-  type        = string
-}
-
-variable "region" {
-  description = "The AWS region"
-  type        = string
-  default     = "us-east-1"
+  validation {
+    condition        = can(regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$", var.user_uuid))
+    error_message    = "The user_uuid value is not a valid UUID."
+  }
 }
